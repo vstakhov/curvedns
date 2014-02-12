@@ -41,7 +41,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "crypto_box_curve25519xsalsa20poly1305.h"
+#include "sodium.h"
 #include "debug.h"
 #include "misc.h"
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	// Generate the actual keypair:
-	crypto_box_curve25519xsalsa20poly1305_keypair(public, private);
+	crypto_box_keypair(public, private);
 
 	// The DNSCurve (base32)-encoding of the PUBLIC key:
 	memcpy(dnspublic, "uz5", 3);

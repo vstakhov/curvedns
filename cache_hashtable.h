@@ -43,7 +43,7 @@
 #include <string.h>
 
 #include <ev.h>
-#include "crypto_box_curve25519xsalsa20poly1305.h"
+#include "sodium.h"
 #include "debug.h"
 
 // The cache mechanism isn't really general, it is focused

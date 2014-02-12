@@ -137,7 +137,7 @@ static int getenvoptions() {
 }
 
 int main(int argc, char *argv[]) {
-	int uid, gid, tmp;
+	int uid = -1, gid = -1, tmp;
 
 	if (argc != 5)
 		return usage(argv[0]);
@@ -178,13 +178,10 @@ int main(int argc, char *argv[]) {
 		return 1;
 
 	// Fetch group id:
-	if (!misc_getenv_int("GID", 1, &gid))
-		return 1;
+	misc_getenv_int("GID", 0, &gid);
 
 	// Fetch user id:
-	if (!misc_getenv_int("UID", 1, &uid))
-		return 1;
-
+	misc_getenv_int("UID", 0, &uid);
 	// Open UDP and TCP sockets on local address(es):
 	if (!ip_init(local_addresses, local_addresses_count)) {
 		debug_log(DEBUG_FATAL, "ip_init(): failed, are you root?\n");
@@ -193,15 +190,15 @@ int main(int argc, char *argv[]) {
 
 	// Do exactly this ;]
 	debug_log(DEBUG_INFO, "main(): throwing away root privileges\n");
-	if (setgid(gid) != 0) {
+
+	if (gid != -1 && setgid(gid) != 0) {
 		debug_log(DEBUG_FATAL, "main(): unable to set gid\n");
 		return 1;
 	}
-	if (setuid(uid) != 0) {
+	if (uid != -1 && setuid(uid) != 0) {
 		debug_log(DEBUG_FATAL, "main(): unable to set uid\n");
 		return 1;
 	}
-
 	// Fetch all optional options from the environment:
 	if (!getenvoptions())
 		return 1;

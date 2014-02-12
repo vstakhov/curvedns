@@ -43,7 +43,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "crypto_box_curve25519xsalsa20poly1305.h"
+#include "sodium.h"
 #include "debug.h"
 #include "event.h"
 
