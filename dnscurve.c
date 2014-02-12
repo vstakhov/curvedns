@@ -181,8 +181,8 @@ int dnscurve_analyze_query(event_entry_t *general_entry) {
 		packet->ispublic = 1;
 		memcpy(packet->publicsharedkey, entry->buffer + 8, 32);
 		memcpy(fullnonce, entry->buffer + 40, 12);
-		memcpy(sandbox, entry->buffer + 52, entry->packetsize - 52);
-		sandboxlen = entry->packetsize - 52; // 36 = 52 - 16 bytes at front
+		memcpy(sandbox + 16, entry->buffer + 52, entry->packetsize - 52);
+		sandboxlen = entry->packetsize - 36; // 36 = 52 - 16 bytes at front
 
 		result = dnscurve_get_shared_secret(packet);
 		if ((result < 0) || packet->ispublic) {
@@ -396,9 +396,9 @@ int dnscurve_reply_streamlined_query(event_entry_t *general_entry) {
 	// And finally make the streamlined packet:
 	memcpy(entry->buffer, "R6fnvWJ8", 8);
 	memcpy(entry->buffer + 8, fullnonce, 24);
-	memcpy(entry->buffer + 32, sandbox, entry->packetsize + 32);
+	memcpy(entry->buffer + 32, sandbox + 16, entry->packetsize + 16);
 
-	entry->packetsize += 64;
+	entry->packetsize += 48;
 
 	debug_log(DEBUG_INFO, "dnscurve_reply_streamlined_query(): done encryption, ready to send (%zd bytes)\n", entry->packetsize);
 
